@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import date
 
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
@@ -9,6 +10,17 @@ from django.views import View
 
 from ads.models import Ad, Category
 from users.models import Location, User
+
+import random
+import string
+
+
+def random_lower_string() -> str:
+    return "".join(random.choices(string.ascii_lowercase, k=7))
+
+
+def random_email() -> str:
+    return f"{random_lower_string()}@example.com"
 
 
 def index(request):
@@ -27,6 +39,7 @@ class AddInfo(View):
                 cat = Category()
                 cat.pk = item["Id"]
                 cat.name = item["name"]
+                cat.slug = random_lower_string()
                 cat.save()
 
             with open(json_files[1], 'r', encoding='utf-8') as jsonf:
@@ -48,9 +61,11 @@ class AddInfo(View):
                 user.first_name = item["first_name"]
                 user.last_name = item.get("last_name")
                 user.username = item["username"]
-                user.password = user.set_password(item["password"])
+                user.password = item["password"]
+                user.set_password(user.password)
                 user.role = item["role"]
-                user.age = item["age"]
+                user.birth_date = date(year=date.today().year-int(item["age"]), month=3, day=4)
+                user.email = random_email()
 
                 user.save()
                 user.locations.add(item["location_id"])

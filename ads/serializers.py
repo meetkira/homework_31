@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from ads.models import Ad, Category
+from ads.validators import MinLengthValidator
 from users.models import User
 
 
@@ -37,10 +38,11 @@ class AdCreateSerializer(serializers.ModelSerializer):
         queryset=User.objects.all(),
         slug_field='id'
     )
+    name = serializers.CharField(max_length=100, validators=[MinLengthValidator(10)])
 
     class Meta:
         model = Ad
-        exclude = ['image']
+        exclude = ['image', 'is_published']
 
 
 class AdUpdateSerializer(serializers.ModelSerializer):
@@ -53,6 +55,7 @@ class AdUpdateSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='id'
     )
+    name = serializers.CharField(max_length=100, validators=[MinLengthValidator(10)])
 
     class Meta:
         model = Ad
@@ -62,4 +65,26 @@ class AdUpdateSerializer(serializers.ModelSerializer):
 class AdDestroySerializer(serializers.ModelSerializer):
     class Meta:
         model = Ad
+        fields = ['id']
+
+
+class CatSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+
+class CatCreateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    slug = serializers.CharField(max_length=10, validators=[MinLengthValidator(5)])
+
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+
+class CatDestroySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
         fields = ['id']

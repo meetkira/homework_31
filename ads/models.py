@@ -6,6 +6,7 @@ from users.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
+    slug = models.CharField(max_length=10, unique=True)
 
     class Meta:
         verbose_name = "Категория"
@@ -16,7 +17,7 @@ class Category(models.Model):
 
 
 class Ad(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, null=False)
     price = models.PositiveIntegerField()
     description = models.TextField(max_length=1000, null=True)
     is_published = models.BooleanField(default=False)
