@@ -19,7 +19,7 @@ def index(request):
     return JsonResponse({"status": "ok"}, status=200)
 
 
-@method_decorator(csrf_exempt, name="dispatch")
+'''@method_decorator(csrf_exempt, name="dispatch")
 class AdListView(ListView):
     model = Ad
     queryset = Ad.objects.all()
@@ -69,8 +69,10 @@ class AdListView(ListView):
             "total": paginator.count
         }
 
-        return JsonResponse(response, safe=False)
-
+        return JsonResponse(response, safe=False)'''
+class AdListView(ListAPIView):
+    queryset = Ad.objects.all()
+    serializer_class = AdDetailSerializer
 
 class AdCreateView(CreateAPIView):
     queryset = Ad.objects.all()

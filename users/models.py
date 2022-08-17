@@ -32,7 +32,6 @@ class User(AbstractUser):
     ]
 
     role = models.CharField(max_length=9, default="member", choices=ROLE)
-    #age = models.PositiveIntegerField()
     locations = models.ManyToManyField(Location)
     birth_date = models.DateField(validators=[check_age_validator])
     email = models.EmailField(unique=True, validators=[check_email_validator])
